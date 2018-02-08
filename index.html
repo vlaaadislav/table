@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+
+    <script type="text/x-template" id="grid-template">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th v-for="key in columns"
+                        @click="sortBy(key)"
+                        :class="{ active: sortKey == key }">
+                        {{ key }}
+                        <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr v-for="(entry, index) in filteredData">
+                    <td>{{ index }}</td>
+                    <td v-for="key in columns" :class="{ active: isTrueCond(key, entry) }">
+                        {{entry[key]}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </script>
+
+    <div id="app">
+        <grid
+            :data="gridData"
+            :columns="gridColumns"
+            :conditions="conditions">
+        </grid>
+
+        Условное форматирование <br>
+        <input name="query" v-model="condQuery">
+        <button @click="addNewCond">Добавить</button>
+        <ul>
+            <li
+                is="cond-item"
+                v-for="(cond, index) in conditions"
+                :title="cond"
+                @remove="removeCond(index)"
+            ></li>
+        </ul>
+    </div>
+
+    <script src="bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+    <script src="main.js"></script>
+    
+</body>
+</html>
